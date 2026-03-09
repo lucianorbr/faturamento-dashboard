@@ -31,26 +31,33 @@ export default function BarChartRanking({ data }: BarChartRankingProps) {
     consultorData[row.consultor].realizado += row.realizado;
   });
 
-  // Sort by realizado and get top 5
+  // Sort by realizado - mostrar todos os consultores
   const chartData = Object.values(consultorData)
-    .sort((a, b) => b.realizado - a.realizado)
-    .slice(0, 5); // Top 5
+    .sort((a, b) => b.realizado - a.realizado);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top 5 Consultores</CardTitle>
+        <CardTitle>Ranking de Consultores</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={350}>
           <BarChart
             data={chartData}
             layout="vertical"
-            margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
+            margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" />
-            <YAxis dataKey="consultor" type="category" width={90} />
+            <XAxis 
+              type="number" 
+              tick={{ fontSize: 12, fill: 'currentColor' }}
+            />
+            <YAxis 
+              dataKey="consultor" 
+              type="category" 
+              width={110}
+              tick={{ fontSize: 13, fill: 'currentColor', fontWeight: 500 }}
+            />
             <Tooltip 
               formatter={(value) => {
                 if (typeof value === 'number') {
@@ -58,8 +65,17 @@ export default function BarChartRanking({ data }: BarChartRankingProps) {
                 }
                 return value;
               }}
+              contentStyle={{
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                border: 'none',
+                borderRadius: '8px',
+                color: '#fff',
+              }}
             />
-            <Legend />
+            <Legend 
+              wrapperStyle={{ paddingTop: '20px' }}
+              iconType="square"
+            />
             <Bar dataKey="realizado" fill="#3b82f6" name="Realizado" />
             <Bar dataKey="objetivo" fill="#10b981" name="Objetivo" />
           </BarChart>
