@@ -64,12 +64,14 @@ export default function Dashboard() {
       <header className="sticky top-0 z-50 bg-card border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">D</span>
-            </div>
+            <img 
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663028868194/DnxbjFbmeU53opbf7xnUFy/mercedes-benz-logo-QoiBc8NVGMD4RsPgCV2MpB.webp" 
+              alt="Mercedes-Benz Logo" 
+              className="w-12 h-12"
+            />
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-              <p className="text-sm text-muted-foreground">Faturamento Peças Vans</p>
+              <h1 className="text-2xl font-bold text-foreground">Peças Vans MB</h1>
+              <p className="text-sm text-muted-foreground">Relatório de Vendas de Peças – VANS MB (Gross) – Março/2026</p>
             </div>
           </div>
 
