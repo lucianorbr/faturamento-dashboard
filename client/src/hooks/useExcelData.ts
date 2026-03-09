@@ -55,7 +55,8 @@ export const useExcelData = () => {
           if (!envioDiarioSheet) {
             throw new Error('Aba "Envio diario" não encontrada');
           }
-          const envioDiarioData = XLSX.utils.sheet_to_json(envioDiarioSheet, { header: 0 });
+          // A linha 3 (índice 2) contém os cabeçalhos
+          const envioDiarioData = XLSX.utils.sheet_to_json(envioDiarioSheet, { header: 0, range: 2 });
           console.log('Dados Envio Diario:', envioDiarioData.length, 'linhas');
 
           // Process "NRCP Diário" sheet
@@ -68,7 +69,7 @@ export const useExcelData = () => {
 
           // Transform Envio Diario data
           const processedEnvioDiario = (envioDiarioData as any[])
-            .filter((row) => row['Consultor'] && row['Consultor'] !== 'Consultor')
+            .filter((row) => row['Consultor'] && row['Consultor'] !== 'Consultor' && row['Consultor'] !== undefined)
             .map((row) => ({
               consultor: String(row['Consultor'] || ''),
               conta: String(row['Conta'] || ''),
@@ -88,10 +89,21 @@ export const useExcelData = () => {
           // Transform NRCP Diario data
           const processedNRCP = (nrcpData as any[])
             .filter((row) => row['Data'] && !isNaN(parseFloat(row['Milhão'])))
-            .map((row) => ({
-              data: String(row['Data'] || ''),
-              milhao: parseFloat(row['Milhão'] || 0),
-            }));
+            .map((row) => {
+              // Converter data para formato legível
+              let dataFormatada = String(row['Data'] || '');
+              if (row['Data'] instanceof Date) {
+                dataFormatada = row['Data'].toLocaleDateString('pt-BR');
+              } else if (typeof row['Data'] === 'number') {
+                // Excel serial date
+                const date = new Date((row['Data'] - 25569) * 86400 * 1000);
+                dataFormatada = date.toLocaleDateString('pt-BR');
+              }
+              return {
+                data: dataFormatada,
+                milhao: parseFloat(row['Milhão'] || 0),
+              };
+            });
 
           console.log('Dados processados:', {
             envioDiario: processedEnvioDiario.length,

@@ -12,11 +12,19 @@ export default function ExcelUpload({ onFileSelect, loading }: ExcelUploadProps)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log('File selected:', file?.name);
     if (file && file.name.endsWith('.xlsx')) {
-      onFileSelect(file);
+      console.log('Valid file, calling onFileSelect');
+      try {
+        onFileSelect(file);
+      } catch (err) {
+        console.error('Error in onFileSelect:', err);
+      }
     } else {
-      alert('Por favor, selecione um arquivo .xlsx válido');
+      console.warn('Invalid file selected');
     }
+    // Reset input para permitir re-upload do mesmo arquivo
+    e.target.value = '';
   };
 
   const handleClick = () => {

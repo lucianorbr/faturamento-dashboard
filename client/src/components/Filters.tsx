@@ -42,12 +42,12 @@ export default function Filters({
 
   return (
     <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-card rounded-lg border">
-      <Select value={selectedConsultor || ''} onValueChange={(value) => onConsultorChange(value || null)}>
+      <Select value={selectedConsultor || '__all__'} onValueChange={(value) => onConsultorChange(value === '__all__' ? null : value)}>
         <SelectTrigger className="w-full md:w-48">
           <SelectValue placeholder="Filtrar por Consultor" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Todos os Consultores</SelectItem>
+          <SelectItem value="__all__">Todos os Consultores</SelectItem>
           {consultores.map((consultor) => (
             <SelectItem key={consultor} value={consultor}>
               {consultor}
@@ -56,12 +56,12 @@ export default function Filters({
         </SelectContent>
       </Select>
 
-      <Select value={selectedConta || ''} onValueChange={(value) => onContaChange(value || null)}>
+      <Select value={selectedConta || '__all__'} onValueChange={(value) => onContaChange(value === '__all__' ? null : value)}>
         <SelectTrigger className="w-full md:w-48">
           <SelectValue placeholder="Filtrar por Conta" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Todas as Contas</SelectItem>
+          <SelectItem value="__all__">Todas as Contas</SelectItem>
           {contas.map((conta) => (
             <SelectItem key={conta} value={conta}>
               {conta}
@@ -70,12 +70,12 @@ export default function Filters({
         </SelectContent>
       </Select>
 
-      <Select value={selectedCidade || ''} onValueChange={(value) => onCidadeChange(value || null)}>
+      <Select value={selectedCidade || '__all__'} onValueChange={(value) => onCidadeChange(value === '__all__' ? null : value)}>
         <SelectTrigger className="w-full md:w-48">
           <SelectValue placeholder="Filtrar por Cidade" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Todas as Cidades</SelectItem>
+          <SelectItem value="__all__">Todas as Cidades</SelectItem>
           {cidades.map((cidade) => (
             <SelectItem key={cidade} value={cidade}>
               {cidade}
