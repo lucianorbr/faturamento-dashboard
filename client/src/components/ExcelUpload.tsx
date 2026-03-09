@@ -1,6 +1,9 @@
 import { Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useRef } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useRef, useState } from 'react';
 
 interface ExcelUploadProps {
   onFileSelect: (file: File) => void;
@@ -9,6 +12,8 @@ interface ExcelUploadProps {
 
 export default function ExcelUpload({ onFileSelect, loading }: ExcelUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [password, setPassword] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -27,8 +32,14 @@ export default function ExcelUpload({ onFileSelect, loading }: ExcelUploadProps)
     e.target.value = '';
   };
 
-  const handleClick = () => {
-    fileInputRef.current?.click();
+  const handlePasswordSubmit = () => {
+    if (password === 'usr25w2k40') {
+      setDialogOpen(false);
+      setPassword('');
+      fileInputRef.current?.click();
+    } else {
+      alert('Senha incorreta');
+    }
   };
 
   return (
@@ -40,14 +51,37 @@ export default function ExcelUpload({ onFileSelect, loading }: ExcelUploadProps)
         onChange={handleFileChange}
         className="hidden"
       />
-      <Button
-        onClick={handleClick}
-        disabled={loading}
-        className="gap-2"
-      >
-        <Upload className="w-4 h-4" />
-        {loading ? 'Carregando...' : 'Upload Excel'}
-      </Button>
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            disabled={loading}
+            className="gap-2"
+          >
+            <Upload className="w-4 h-4" />
+            {loading ? 'Carregando...' : 'Upload Excel'}
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Digite a senha para upload</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="password">Senha</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Digite a senha"
+              />
+            </div>
+            <Button onClick={handlePasswordSubmit} className="w-full">
+              Confirmar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -9,14 +9,16 @@ import { toast } from 'sonner';
 
 export default function Dashboard() {
   const { theme, toggleTheme } = useTheme();
-  const { data, loading, error, processExcelFile } = useExcelData();
+  const { data, loading, error, processExcelFile, saveCurrentData } = useExcelData();
   const [hasData, setHasData] = useState(false);
 
   useEffect(() => {
     console.log('Dashboard mounted');
-    // Tentar carregar o arquivo de exemplo automaticamente
-    loadSampleFile();
-  }, []);
+    // Tentar carregar o arquivo de exemplo automaticamente apenas se não houver dados salvos
+    if (data.envioDiario.length === 0) {
+      loadSampleFile();
+    }
+  }, [data.envioDiario.length]);
 
   const loadSampleFile = async () => {
     try {
@@ -77,6 +79,21 @@ export default function Dashboard() {
 
           <div className="flex items-center gap-3">
             <ExcelUpload onFileSelect={handleFileSelect} loading={loading} />
+            {hasData && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  saveCurrentData();
+                  toast.success('Dados salvos com sucesso!');
+                }}
+                className="gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Salvar Dados
+              </Button>
+            )}
             <Button
               variant="outline"
               size="icon"

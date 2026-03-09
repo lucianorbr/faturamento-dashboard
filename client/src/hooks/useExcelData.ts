@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 export interface EnvioDiarioRow {
   consultor: string;
@@ -34,6 +34,35 @@ export const useExcelData = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const STORAGE_KEY = 'dashboard-data';
+
+  // Carregar dados do localStorage
+  useEffect(() => {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setData(parsedData);
+      } catch (err) {
+        console.error('Erro ao carregar dados salvos:', err);
+      }
+    }
+  }, []);
+
+  // Salvar dados no localStorage
+  const saveData = useCallback((newData: DashboardData) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+    } catch (err) {
+      console.error('Erro ao salvar dados:', err);
+    }
+  }, []);
+
+  // Função para salvar manualmente
+  const saveCurrentData = useCallback(() => {
+    saveData(data);
+  }, [data, saveData]);
 
   const processExcelFile = useCallback((file: File) => {
     setLoading(true);
@@ -110,10 +139,13 @@ export const useExcelData = () => {
             nrcpDiario: processedNRCP.length,
           });
 
-          setData({
+          const processedData = {
             envioDiario: processedEnvioDiario,
             nrcpDiario: processedNRCP,
-          });
+          };
+
+          setData(processedData);
+          saveData(processedData);
           setLoading(false);
         } catch (err) {
           const errorMsg = `Erro ao processar arquivo: ${err instanceof Error ? err.message : 'Desconhecido'}`;
@@ -142,5 +174,6 @@ export const useExcelData = () => {
     loading,
     error,
     processExcelFile,
+    saveCurrentData,
   };
 };
