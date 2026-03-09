@@ -1,18 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { NRCPDiarioRow } from '@/hooks/useExcelData';
 
-interface NRCPLineChartProps {
+interface NRCPBarChartProps {
   data: NRCPDiarioRow[];
 }
 
-export default function NRCPLineChart({ data }: NRCPLineChartProps) {
+export default function NRCPBarChart({ data }: NRCPBarChartProps) {
   // Format data for chart - as datas já vêm formatadas do hook
   const chartData = data
     .map((row) => ({
       data: row.data, // Já está formatado em pt-BR
       milhao: row.milhao,
-      dataObj: new Date(row.data.split('/').reverse().join('-')), // Para ordenação
+      dataObj: (() => {
+        const [day, month, year] = row.data.split('/').map(Number);
+        return new Date(Date.UTC(year, month - 1, day));
+      })(),
     }))
     .sort((a, b) => a.dataObj.getTime() - b.dataObj.getTime())
     .map(({ dataObj, ...rest }) => rest); // Remove o campo temporário
@@ -24,14 +27,14 @@ export default function NRCPLineChart({ data }: NRCPLineChartProps) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={chartData}>
+          <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="data" angle={-45} textAnchor="end" height={80} />
             <YAxis />
             <Tooltip formatter={(value) => (typeof value === 'number' ? `R$ ${value.toFixed(2)}M` : value)} />
             <Legend />
-            <Line type="monotone" dataKey="milhao" stroke="#3b82f6" name="Milhão (R$)" />
-          </LineChart>
+            <Bar dataKey="milhao" fill="#3b82f6" name="Milhão (R$)" />
+          </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>

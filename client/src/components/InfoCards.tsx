@@ -30,7 +30,7 @@ export default function InfoCards({ data }: InfoCardsProps) {
   const gross = calculateSum('gross');
   const r20 = calculateSum('r20');
   const realizado = calculateSum('realizado');
-  const performance = data.length > 0 ? calculateSum('performance') / data.length : 0;
+  const performance = data.length > 0 ? (calculateSum('performance') / data.length) * 100 : 0;
   const falta100 = calculateSum('falta100');
   const pipeline = calculateSum('pipeline');
 

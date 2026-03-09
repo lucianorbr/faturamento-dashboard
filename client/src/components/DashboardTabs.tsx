@@ -4,7 +4,8 @@ import InfoCards from './InfoCards';
 import Filters from './Filters';
 import LineChartValues from './LineChartValues';
 import BarChartRanking from './BarChartRanking';
-import NRCPLineChart from './NRCPLineChart';
+import NRCPBarChart from './NRCPBarChart';
+import NRCPInfoCard from './NRCPInfoCard';
 import { useState } from 'react';
 
 interface DashboardTabsProps {
@@ -59,7 +60,10 @@ export default function DashboardTabs({ data }: DashboardTabsProps) {
 
       <TabsContent value="nrcp" className="space-y-6">
         {data.nrcpDiario.length > 0 ? (
-          <NRCPLineChart data={data.nrcpDiario} />
+          <>
+            <NRCPInfoCard data={data.nrcpDiario} />
+            <NRCPBarChart data={data.nrcpDiario} />
+          </>
         ) : (
           <div className="text-center py-12">
             <p className="text-muted-foreground">Nenhum dado NRCP disponível</p>

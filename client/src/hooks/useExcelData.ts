@@ -117,7 +117,7 @@ export const useExcelData = () => {
 
           // Transform NRCP Diario data
           const processedNRCP = (nrcpData as any[])
-            .filter((row) => row['Data'] && !isNaN(parseFloat(row['Milhão'])) && String(row['Data']).toLowerCase() !== 'total')
+            .filter((row) => row['Data'] && !isNaN(parseFloat(row['Milhão'])) && !String(row['Data']).toLowerCase().includes('total'))
             .map((row) => {
               // Converter data para formato legível
               let dataFormatada = String(row['Data'] || '');
@@ -126,7 +126,7 @@ export const useExcelData = () => {
               } else if (typeof row['Data'] === 'number') {
                 // Excel serial date
                 const date = new Date((row['Data'] - 25569) * 86400 * 1000);
-                dataFormatada = date.toLocaleDateString('pt-BR');
+                dataFormatada = date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
               }
               return {
                 data: dataFormatada,
