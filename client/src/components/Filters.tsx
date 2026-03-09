@@ -28,9 +28,40 @@ export default function Filters({
   onContaChange,
   onCidadeChange,
 }: FiltersProps) {
+  // Get all consultores
   const consultores = Array.from(new Set(data.map((row) => row.consultor))).sort();
-  const contas = Array.from(new Set(data.map((row) => row.conta))).sort();
-  const cidades = Array.from(new Set(data.map((row) => row.cidade))).sort();
+
+  // Get contas filtered by selected consultor
+  const getContas = () => {
+    if (selectedConsultor) {
+      return Array.from(
+        new Set(
+          data
+            .filter((row) => row.consultor === selectedConsultor)
+            .map((row) => row.conta)
+        )
+      ).sort();
+    }
+    return Array.from(new Set(data.map((row) => row.conta))).sort();
+  };
+
+  // Get cidades filtered by selected consultor and conta
+  const getCidades = () => {
+    let filtered = data;
+
+    if (selectedConsultor) {
+      filtered = filtered.filter((row) => row.consultor === selectedConsultor);
+    }
+
+    if (selectedConta) {
+      filtered = filtered.filter((row) => row.conta === selectedConta);
+    }
+
+    return Array.from(new Set(filtered.map((row) => row.cidade))).sort();
+  };
+
+  const contas = getContas();
+  const cidades = getCidades();
 
   const hasActiveFilters = selectedConsultor || selectedConta || selectedCidade;
 
@@ -40,9 +71,27 @@ export default function Filters({
     onCidadeChange(null);
   };
 
+  // Reset conta and cidade when consultor changes
+  const handleConsultorChange = (value: string | null) => {
+    onConsultorChange(value);
+    onContaChange(null);
+    onCidadeChange(null);
+  };
+
+  // Reset cidade when conta changes
+  const handleContaChange = (value: string | null) => {
+    onContaChange(value);
+    onCidadeChange(null);
+  };
+
   return (
     <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-card rounded-lg border">
-      <Select value={selectedConsultor || '__all__'} onValueChange={(value) => onConsultorChange(value === '__all__' ? null : value)}>
+      <Select
+        value={selectedConsultor || '__all__'}
+        onValueChange={(value) =>
+          handleConsultorChange(value === '__all__' ? null : value)
+        }
+      >
         <SelectTrigger className="w-full md:w-48">
           <SelectValue placeholder="Filtrar por Consultor" />
         </SelectTrigger>
@@ -56,12 +105,19 @@ export default function Filters({
         </SelectContent>
       </Select>
 
-      <Select value={selectedConta || '__all__'} onValueChange={(value) => onContaChange(value === '__all__' ? null : value)}>
+      <Select
+        value={selectedConta || '__all__'}
+        onValueChange={(value) =>
+          handleContaChange(value === '__all__' ? null : value)
+        }
+      >
         <SelectTrigger className="w-full md:w-48">
           <SelectValue placeholder="Filtrar por Conta" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="__all__">Todas as Contas</SelectItem>
+          <SelectItem value="__all__">
+            {selectedConsultor ? 'Todas as Contas' : 'Todas as Contas'}
+          </SelectItem>
           {contas.map((conta) => (
             <SelectItem key={conta} value={conta}>
               {conta}
@@ -70,7 +126,12 @@ export default function Filters({
         </SelectContent>
       </Select>
 
-      <Select value={selectedCidade || '__all__'} onValueChange={(value) => onCidadeChange(value === '__all__' ? null : value)}>
+      <Select
+        value={selectedCidade || '__all__'}
+        onValueChange={(value) =>
+          onCidadeChange(value === '__all__' ? null : value)
+        }
+      >
         <SelectTrigger className="w-full md:w-48">
           <SelectValue placeholder="Filtrar por Cidade" />
         </SelectTrigger>
