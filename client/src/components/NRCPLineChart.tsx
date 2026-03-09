@@ -7,28 +7,30 @@ interface NRCPLineChartProps {
 }
 
 export default function NRCPLineChart({ data }: NRCPLineChartProps) {
-  // Format data for chart
+  // Format data for chart - as datas já vêm formatadas do hook
   const chartData = data
     .map((row) => ({
-      data: new Date(row.data).toLocaleDateString('pt-BR'),
+      data: row.data, // Já está formatado em pt-BR
       milhao: row.milhao,
+      dataObj: new Date(row.data.split('/').reverse().join('-')), // Para ordenação
     }))
-    .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime());
+    .sort((a, b) => a.dataObj.getTime() - b.dataObj.getTime())
+    .map(({ dataObj, ...rest }) => rest); // Remove o campo temporário
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>NRCP Diário</CardTitle>
+        <CardTitle>NRCP Diário - Valores por Data</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="data" />
+            <XAxis dataKey="data" angle={-45} textAnchor="end" height={80} />
             <YAxis />
-            <Tooltip formatter={(value) => (typeof value === 'number' ? value.toFixed(2) : value)} />
+            <Tooltip formatter={(value) => (typeof value === 'number' ? `R$ ${value.toFixed(2)}M` : value)} />
             <Legend />
-            <Line type="monotone" dataKey="milhao" stroke="#06b6d4" strokeWidth={2} name="Milhão" />
+            <Line type="monotone" dataKey="milhao" stroke="#3b82f6" strokeWidth={2} name="Milhão (R$)" dot={{ fill: '#3b82f6', r: 4 }} />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>
