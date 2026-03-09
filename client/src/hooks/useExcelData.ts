@@ -88,7 +88,7 @@ export const useExcelData = () => {
 
           // Transform NRCP Diario data
           const processedNRCP = (nrcpData as any[])
-            .filter((row) => row['Data'] && !isNaN(parseFloat(row['Milhão'])))
+            .filter((row) => row['Data'] && !isNaN(parseFloat(row['Milhão'])) && String(row['Data']).toLowerCase() !== 'total')
             .map((row) => {
               // Converter data para formato legível
               let dataFormatada = String(row['Data'] || '');
