@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
 import { EnvioDiarioRow } from '@/hooks/useExcelData';
 
 interface LineChartValuesProps {
@@ -13,6 +13,13 @@ const formatCurrency = (value: number): string => {
     return `R$ ${(value / 1000).toFixed(0)}K`;
   }
   return `R$ ${value.toFixed(0)}`;
+};
+
+const formatCompactLabel = (value: number): string => {
+  if (value === 0 || !value) return '';
+  if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+  if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+  return value.toFixed(0);
 };
 
 export default function LineChartValues({ data }: LineChartValuesProps) {
@@ -46,7 +53,7 @@ export default function LineChartValues({ data }: LineChartValuesProps) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 80 }}>
+          <LineChart data={chartData} margin={{ top: 25, right: 30, left: 0, bottom: 80 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="consultor" 
@@ -90,7 +97,9 @@ export default function LineChartValues({ data }: LineChartValuesProps) {
               name="Objetivo"
               strokeWidth={2}
               dot={{ r: 4 }}
-            />
+            >
+              <LabelList dataKey="objetivo" position="top" formatter={formatCompactLabel} fontSize={10} fill="#3b82f6" />
+            </Line>
             <Line 
               type="monotone" 
               dataKey="gross" 
@@ -98,7 +107,9 @@ export default function LineChartValues({ data }: LineChartValuesProps) {
               name="Gross"
               strokeWidth={2}
               dot={{ r: 4 }}
-            />
+            >
+              <LabelList dataKey="gross" position="top" formatter={formatCompactLabel} fontSize={10} fill="#10b981" />
+            </Line>
             <Line 
               type="monotone" 
               dataKey="realizado" 
@@ -106,7 +117,9 @@ export default function LineChartValues({ data }: LineChartValuesProps) {
               name="Realizado"
               strokeWidth={2}
               dot={{ r: 4 }}
-            />
+            >
+              <LabelList dataKey="realizado" position="top" formatter={formatCompactLabel} fontSize={10} fill="#f59e0b" />
+            </Line>
             <Line 
               type="monotone" 
               dataKey="pipeline" 
@@ -114,7 +127,9 @@ export default function LineChartValues({ data }: LineChartValuesProps) {
               name="Pipeline"
               strokeWidth={2}
               dot={{ r: 4 }}
-            />
+            >
+              <LabelList dataKey="pipeline" position="top" formatter={formatCompactLabel} fontSize={10} fill="#8b5cf6" />
+            </Line>
           </LineChart>
         </ResponsiveContainer>
       </CardContent>
