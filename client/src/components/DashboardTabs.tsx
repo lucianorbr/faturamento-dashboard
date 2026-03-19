@@ -32,7 +32,7 @@ export default function DashboardTabs({ data }: DashboardTabsProps) {
         <TabsTrigger value="nrcp">NRCP Diário</TabsTrigger>
       </TabsList>
 
-      <TabsContent value="envio" className="space-y-6">
+      <TabsContent value="envio" className="space-y-6 animate-in fade-in zoom-in-[0.98] duration-500 ease-out">
         <Filters
           data={data.envioDiario}
           selectedConsultor={selectedConsultor}
@@ -45,27 +45,33 @@ export default function DashboardTabs({ data }: DashboardTabsProps) {
 
         {filteredData.length > 0 ? (
           <>
-            <InfoCards data={filteredData} />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
+              <InfoCards data={filteredData} />
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 fill-mode-both">
               <LineChartValues data={filteredData} />
               <BarChartRanking data={filteredData} />
             </div>
           </>
         ) : (
-          <div className="text-center py-12">
+          <div className="text-center py-12 animate-in fade-in duration-500">
             <p className="text-muted-foreground">Nenhum dado disponível com os filtros selecionados</p>
           </div>
         )}
       </TabsContent>
 
-      <TabsContent value="nrcp" className="space-y-6">
+      <TabsContent value="nrcp" className="space-y-6 animate-in fade-in zoom-in-[0.98] duration-500 ease-out">
         {data.nrcpDiario.length > 0 ? (
           <>
-            <NRCPInfoCard data={data.nrcpDiario} />
-            <NRCPBarChart data={data.nrcpDiario} />
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
+              <NRCPInfoCard data={data.nrcpDiario} />
+            </div>
+            <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 fill-mode-both">
+              <NRCPBarChart data={data.nrcpDiario} />
+            </div>
           </>
         ) : (
-          <div className="text-center py-12">
+          <div className="text-center py-12 animate-in fade-in duration-500">
             <p className="text-muted-foreground">Nenhum dado NRCP disponível</p>
           </div>
         )}
