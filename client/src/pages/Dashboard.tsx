@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useExcelData } from '@/hooks/useExcelData';
-import ExcelUpload from '@/components/ExcelUpload';
 import DashboardTabs from '@/components/DashboardTabs';
 import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
@@ -55,10 +54,6 @@ export default function Dashboard() {
     }
   }, [data]);
 
-  const handleFileSelect = (file: File) => {
-    console.log('File selected:', file.name);
-    processExcelFile(file);
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,7 +73,6 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-3">
-            <ExcelUpload onFileSelect={handleFileSelect} loading={loading} />
             <Button
               variant="outline"
               size="icon"
@@ -131,9 +125,8 @@ export default function Dashboard() {
             </div>
             <h2 className="text-2xl font-bold text-foreground mb-2">Bem-vindo ao Dashboard</h2>
             <p className="text-muted-foreground mb-6">
-              Carregue um arquivo Excel (.xlsx) para começar a visualizar os dados
+              Aguarde enquanto os dados são carregados...
             </p>
-            <ExcelUpload onFileSelect={handleFileSelect} loading={loading} />
           </div>
         )}
 
